@@ -51,22 +51,16 @@ class UserActivity : AppCompatActivity() {
         update_user_button.setOnClickListener { updateUserName() }
 
         update_button.setOnClickListener {
-            Log.v("JH", "Update Button Clicked")
-            "https://server-manager.majecty.tech/api/dev2/health"
-                    .httpPost()
-                    .body(""" { "apiKey": "caisson-outrage-kava-malapert-castanet-advised-armory-mink-church" } """)
-                    .liveDataResponseString()
-                    .observe(this, Observer {
-                        val (response, result) = it
-                        val (bytes, err) = result
-                        if (bytes != null) {
-                            Log.v("JH", "Success $bytes")
-                            server_status.text = bytes
-                        } else {
-                            Log.e("JH", "Failed ${err.toString()}")
-                            server_status.text = err.toString()
-                        }
-                    })
+            updateServerState()
+        }
+        updateServerState()
+
+        start_button.setOnClickListener {
+            startServer();
+        }
+
+        stop_button.setOnClickListener {
+            stopServer();
         }
     }
 
@@ -100,6 +94,73 @@ class UserActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ update_user_button.isEnabled = true },
                         { error -> Log.e(TAG, "Unable to update username", error) }))
+    }
+
+    fun updateServerState() {
+        Log.v("JH", "Update Button Clicked")
+        "https://server-manager.majecty.tech/api/dev2/health"
+                .httpPost()
+                .body(""" { "apiKey": "caisson-outrage-kava-malapert-castanet-advised-armory-mink-church" } """)
+                .liveDataResponseString()
+                .observe(this, Observer {
+                    val (response, result) = it
+                    val (bytes, err) = result
+                    if (bytes != null) {
+                        Log.v("JH", "Success $bytes")
+                        server_status.text = bytes
+                    } else {
+                        Log.e("JH", "Failed ${err.toString()}")
+                        server_status.text = err.toString()
+                    }
+                })
+    }
+
+    fun startServer() {
+        val timeout = 5000 // 5000 milliseconds = 5 seconds.
+        val readTimeout = 60000 // 60000 milliseconds = 1 minute.
+
+        Log.v("JH", "Start Button Clicked")
+        "https://server-manager.majecty.tech/api/dev2/start"
+                .httpPost()
+                .body(""" { "apiKey": "caisson-outrage-kava-malapert-castanet-advised-armory-mink-church" } """)
+                .timeout(timeout)
+                .timeoutRead(readTimeout)
+                .liveDataResponseString()
+                .observe(this, Observer {
+                    val (response, result) = it
+                    val (bytes, err) = result
+                    if (bytes != null) {
+                        Log.v("JH", "Success $bytes")
+                        server_status.text = bytes
+                    } else {
+                        Log.e("JH", "Failed ${err.toString()}")
+                        server_status.text = err.toString()
+                    }
+                })
+    }
+
+    fun stopServer() {
+        val timeout = 5000 // 5000 milliseconds = 5 seconds.
+        val readTimeout = 60000 // 60000 milliseconds = 1 minute.
+
+        Log.v("JH", "Stop Button Clicked")
+        "https://server-manager.majecty.tech/api/dev2/stop"
+                .httpPost()
+                .body(""" { "apiKey": "caisson-outrage-kava-malapert-castanet-advised-armory-mink-church" } """)
+                .timeout(timeout)
+                .timeoutRead(readTimeout)
+                .liveDataResponseString()
+                .observe(this, Observer {
+                    val (response, result) = it
+                    val (bytes, err) = result
+                    if (bytes != null) {
+                        Log.v("JH", "Success $bytes")
+                        server_status.text = bytes
+                    } else {
+                        Log.e("JH", "Failed ${err.toString()}")
+                        server_status.text = err.toString()
+                    }
+                })
     }
 
     companion object {
