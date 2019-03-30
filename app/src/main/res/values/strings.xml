@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BasicRxJavaSampleKotlin</string>
+    <string name="update_user">Update username</string>
+    <string name="button_update_state">Update state</string>
+    <string name="start_button">Start</string>
+    <string name="stop_button">Stop</string>
+    <string name="server_status_text">Server Status</string>
+</resources>
